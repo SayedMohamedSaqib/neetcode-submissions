@@ -1,54 +1,37 @@
 class Solution {
+    public static int searchinArray(int[] arr, int tar, int si, int ei) {
+        if(si > ei) {
+            return -1;
+        }
+        int mid = si + (ei - si)/ 2;
 
-    // Find index of the minimum element (pivot)
-    public int findMinIndex(int[] nums) {
-        int left = 0;
-        int right = nums.length - 1;
+        if(arr[mid] == tar) {
+            return mid;
+        }
 
-        while (left < right) {
-            int mid = left + (right - left) / 2;
+        // case 1 : mid on L1
+        if(arr[si] <= arr[mid]) {
+            if(arr[si] <= tar && tar <= arr[mid]) {
+                return searchinArray(arr, tar, si, mid - 1);
+            }
 
-            if (nums[mid] > nums[right]) {
-                // Minimum is in the right half
-                left = mid + 1;
-            } else {
-                // Minimum is at mid or in the left half
-                right = mid;
+            else {
+                return searchinArray(arr, tar, mid + 1, ei);
             }
         }
 
-        return left;
-    }
+        else {
+            if(arr[mid] <= tar && tar <= arr[ei]) {
+                return searchinArray(arr, tar, mid + 1, ei);
+            }
 
-    // Standard binary search
-    public int binarySearch(int[] nums, int left, int right, int target) {
-
-        while (left <= right) {
-
-            int mid = left + (right - left) / 2;
-
-            if (nums[mid] == target)
-                return mid;
-
-            if (nums[mid] < target)
-                left = mid + 1;
-            else
-                right = mid - 1;
+            else {
+                return searchinArray(arr, tar, si, mid - 1);
+            }
         }
-
-        return -1;
     }
 
     public int search(int[] nums, int target) {
-
-        int pivot = findMinIndex(nums);
-
-        // Search in the right sorted half
-        if (target >= nums[pivot] && target <= nums[nums.length - 1]) {
-            return binarySearch(nums, pivot, nums.length - 1, target);
-        }
-
-        // Search in the left sorted half
-        return binarySearch(nums, 0, pivot - 1, target);
+        return searchinArray(nums, target, 0, nums.length - 1);
     }
 }
